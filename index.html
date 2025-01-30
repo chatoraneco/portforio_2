@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ポートフォリオ</title>
+    <link rel="stylesheet" href="./css/custom.css"> <!-- 外部CSS -->
+    <!-- Google Fonts で Orbitron フォントを追加 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li><a href="#about">自己紹介</a></li>
+                    <li><a href="#work">ゲーム</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>H e l l o !</h1>
+            <p>Webデザイナー（見習い）・開発者（見習い） | ドジです</p>
+            <a href="#work" class="cta-button">サイコロゲーム</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>三村です。</h2>
+        <p>気ままに色々触ってます。</p>
+    </section>
+
+    <section id="work" class="work">
+    <style>
+        /* サイコロの数字を右側に表示 */
+        .dice-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .dice {
+            font-size: 50px;
+            margin-right: 10px;
+        }
+
+        .dice-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .game-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .result-section {
+            margin-top: 20px;
+        }
+
+        .game-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- サイコロゲーム -->
+    <section id="game" class="work">
+        <div class="game-container">
+            <h3>🎲 サイコロゲーム 🎲</h3>
+            <p>2人でサイコロを振って勝負しよう！</p>
+
+            <!-- プレイヤーAのセクション -->
+            <div class="player-section">
+                <h4>プレイヤーA</h4>
+                <div class="dice-container">
+                    <div id="playerA-dice" class="dice">🎲</div>
+                    <div id="playerA-number" class="dice-number">0</div>
+                </div>
+                <button id="playerA-roll" class="game-button">サイコロを振る</button>
+            </div>
+
+            <!-- プレイヤーBのセクション -->
+            <div class="player-section">
+                <h4>プレイヤーB</h4>
+                <div class="dice-container">
+                    <div id="playerB-dice" class="dice">🎲</div>
+                    <div id="playerB-number" class="dice-number">0</div>
+                </div>
+                <button id="playerB-roll" class="game-button" disabled>サイコロを振る</button>
+            </div>
+
+            <!-- 勝敗表示とスコア -->
+            <div class="result-section">
+                <h4 id="result-message">勝負の結果: ???</h4>
+                <p>スコア: プレイヤーA <span id="playerA-score">0</span> - <span id="playerB-score">0</span> プレイヤーB</p>
+                <button id="reset-game" class="game-button">リセット</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- モグラ叩きゲーム -->
+    <section id="whack-a-mole" class="work">
+        <div class="game-container">
+            <h3>🐹 モグラ叩きゲーム 🐹</h3>
+            <p>モグラをクリックして得点を稼ごう！</p>
+            <div id="mole-container" class="mole-container">
+                <!-- モグラの穴がここに追加されます -->
+            </div>
+            <p>スコア: <span id="score">0</span></p>
+            <p>残り時間: <span id="time">10</span>秒</p>
+            <button id="start-game" class="game-button">スタート</button>
+            <h4>ベストスコア</h4>
+            <ul id="best-scores">
+                <!-- ベストスコアがここに表示されます -->
+            </ul>
+        </div>
+    </section>
+
+    <!-- マインスイーパゲーム -->
+    <section id="minesweeper" class="work">
+    <div class="game-container">
+        <h3>💣 マインスイーパ 💣</h3>
+        <p>地雷を避けてすべてのセルを開けよう！</p>
+        <div id="minesweeper-container" class="minesweeper-container">
+            <!-- マインスイーパのセルがここに追加されます -->
+        </div>
+        <p>地雷の総数: <span id="mine-count">0</span></p>
+        <button id="reset-minesweeper" class="game-button">リセット</button>
+    </div>
+</section>
+
+<!-- 数独ゲーム -->
+<section id="sudoku" class="work">
+    <div class="game-container">
+        <h3>🧩 数独ゲーム 🧩</h3>
+        <p>数独を解いてみよう！</p>
+        <div id="sudoku-container" class="sudoku-container">
+            <!-- 数独のセルがここに追加されます -->
+        </div>
+        <button id="toggle-memo" class="game-button">メモモード</button>
+        <button id="reset-sudoku" class="game-button">リセット</button>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const minesweeperContainer = document.getElementById("minesweeper-container");
+        const resetMinesweeperButton = document.getElementById("reset-minesweeper");
+        const mineCountDisplay = document.getElementById("mine-count");
+        const rows = 10;
+        const cols = 10;
+        let minesCount = 9; // 最大9個の地雷
+        let minesweeperGrid = [];
+        let gameOver = false;
+
+        // マインスイーパのセルを作成する関数
+        function createMinesweeperGrid() {
+            minesweeperContainer.innerHTML = "";
+            minesweeperGrid = [];
+            gameOver = false;
+
+            // 地雷の数を設定
+            minesCount = Math.floor(Math.random() * 9) + 1; // 1から9の間でランダム
+            mineCountDisplay.textContent = minesCount;
+
+            for (let row = 0; row < rows; row++) {
+                const rowArray = [];
+                for (let col = 0; col < cols; col++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("minesweeper-cell");
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener("click", () => openCell(row, col));
+                    minesweeperContainer.appendChild(cell);
+                    rowArray.push({ element: cell, mine: false, opened: false, flagged: false });
+                }
+                minesweeperGrid.push(rowArray);
+            }
+
+            // 地雷をランダムに配置
+            let minesPlaced = 0;
+            while (minesPlaced < minesCount) {
+                const randomRow = Math.floor(Math.random() * rows);
+                const randomCol = Math.floor(Math.random() * cols);
+                if (!minesweeperGrid[randomRow][randomCol].mine) {
+                    minesweeperGrid[randomRow][randomCol].mine = true;
+                    minesPlaced++;
+                }
+            }
+        }
+
+        // セルを開ける関数
+        function openCell(row, col) {
+            if (gameOver || minesweeperGrid[row][col].opened) return;
+
+            const cell = minesweeperGrid[row][col];
+            cell.opened = true;
+            cell.element.classList.add("opened");
+
+            if (cell.mine) {
+                cell.element.classList.add("mine");
+                gameOver = true;
+                alert("ゲームオーバー！地雷を踏みました！");
+                revealMines();
+                return;
+            }
+
+            const adjacentMines = countAdjacentMines(row, col);
+            if (adjacentMines > 0) {
+                cell.element.textContent = adjacentMines;
+            } else {
+                // 周囲に地雷がない場合は隣接するセルも開ける
+                openAdjacentCells(row, col);
+            }
+
+            checkWin();
+        }
+
+        // 周囲の地雷の数を数える関数
+        function countAdjacentMines(row, col) {
+            let count = 0;
+            for (let r = -1; r <= 1; r++) {
+                for (let c = -1; c <= 1; c++) {
+                    const newRow = row + r;
+                    const newCol = col + c;
+                    if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && minesweeperGrid[newRow][newCol].mine) {
+                        count++;
+                    };
+                }
+            }
+            return count;
+        }
+
+        // 隣接するセルを開ける関数
+        function openAdjacentCells(row, col) {
+            for (let r = -1; r <= 1; r++) {
+                for (let c = -1; c <= 1; c++) {
+                    const newRow = row + r;
+                    const newCol = col + c;
+                    if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !minesweeperGrid[newRow][newCol].opened) {
+                        openCell(newRow, newCol);
+                    }
+                }
+            }
+        }
+
+        // 地雷をすべて表示する関数
+        function revealMines() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (minesweeperGrid[row][col].mine) {
+                        minesweeperGrid[row][col].element.classList.add("mine");
+                    }
+                }
+            }
+        }
+
+        // 勝利をチェックする関数
+        function checkWin() {
+            let openedCells = 0;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (minesweeperGrid[row][col].opened) {
+                        openedCells++;
+                    }
+                }
+            }
+            if (openedCells === rows * cols - minesCount) {
+                alert("おめでとう！すべてのセルを開けました！");
+                gameOver = true;
+                revealMines();
+            }
+        }
+
+        // リセットボタンのイベントリスナー
+        resetMinesweeperButton.addEventListener("click", createMinesweeperGrid);
+
+        // 初期設定
+        createMinesweeperGrid();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const sudokuContainer = document.getElementById("sudoku-container");
+        const resetSudokuButton = document.getElementById("reset-sudoku");
+        const toggleMemoButton = document.getElementById("toggle-memo");
+        const size = 9;
+        let sudokuGrid = [];
+        let memoMode = false;
+
+        // 数独のセルを作成する関数
+        function createSudokuGrid() {
+            sudokuContainer.innerHTML = "";
+            sudokuGrid = [];
+
+            for (let row = 0; row < size; row++) {
+                const rowArray = [];
+                for (let col = 0; col < size; col++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("sudoku-cell");
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.contentEditable = true;
+                    cell.addEventListener("input", () => validateCell(row, col));
+                    sudokuContainer.appendChild(cell);
+                    rowArray.push(cell);
+                }
+                sudokuGrid.push(rowArray);
+            }
+
+            // 数独の初期配置を設定
+            setInitialSudokuValues();
+        }
+
+        // 数独の初期配置を設定する関数
+        function setInitialSudokuValues() {
+            const initialValuesList = [
+                [
+                    [5, 3, null, null, 7, null, null, null, null],
+                    [6, null, null, 1, 9, 5, null, null, null],
+                    [null, 9, 8, null, null, null, null, 6, null],
+                    [8, null, null, null, 6, null, null, null, 3],
+                    [4, null, null, 8, null, 3, null, null, 1],
+                    [7, null, null, null, 2, null, null, null, 6],
+                    [null, 6, null, null, null, null, 2, 8, null],
+                    [null, null, null, 4, 1, 9, null, null, 5],
+                    [null, null, null, null, 8, null, null, 7, 9]
+                ],
+                [
+                    [null, null, null, 2, 6, null, 7, null, 1],
+                    [6, 8, null, null, 7, null, null, 9, null],
+                    [1, 9, null, null, null, 4, 5, null, null],
+                    [8, 2, null, 1, null, null, null, 4, null],
+                    [null, null, 4, 6, null, 2, 9, null, null],
+                    [null, 5, null, null, null, 3, null, 2, 8],
+                    [null, null, 9, 3, null, null, null, 7, 4],
+                    [null, 4, null, null, 5, null, null, 3, 6],
+                    [7, null, 3, null, 1, 8, null, null, null]
+                ],
+                [
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null]
+                ]
+            ];
+
+            const initialValues = initialValuesList[Math.floor(Math.random() * initialValuesList.length)];
+
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    if (initialValues[row][col] !== null) {
+                        sudokuGrid[row][col].textContent = initialValues[row][col];
+                        sudokuGrid[row][col].contentEditable = false;
+                    }
+                }
+            }
+        }
+
+        // セルの入力を検証する関数
+        function validateCell(row, col) {
+            const cell = sudokuGrid[row][col];
+            const value = cell.textContent.trim();
+
+            if (memoMode) {
+                cell.classList.add("memo");
+            } else {
+                cell.classList.remove("memo");
+                if (!/^[1-9]$/.test(value)) {
+                    cell.textContent = "";
+                    return;
+                }
+
+                // 行、列、ブロックの重複をチェック
+                if (!isValidSudoku(row, col, value)) {
+                    cell.classList.add("invalid");
+                } else {
+                    cell.classList.remove("invalid");
+                    checkWin();
+                }
+            }
+        }
+
+        // 数独の有効性をチェックする関数
+        function isValidSudoku(row, col, value) {
+            // 行のチェック
+            for (let c = 0; c < size; c++) {
+                if (c !== col && sudokuGrid[row][c].textContent.trim() === value) {
+                    return false;
+                }
+            }
+
+            // 列のチェック
+            for (let r = 0; r < size; r++) {
+                if (r !== row && sudokuGrid[r][col].textContent.trim() === value) {
+                    return false;
+                }
+            }
+
+            // ブロックのチェック
+            const startRow = Math.floor(row / 3) * 3;
+            const startCol = Math.floor(col / 3) * 3;
+            for (let r = startRow; r < startRow + 3; r++) {
+                for (let c = startCol; c < startCol + 3; c++) {
+                    if ((r !== row || c !== col) && sudokuGrid[r][c].textContent.trim() === value) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        // 数独がクリアされたかチェックする関数
+        function checkWin() {
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const cell = sudokuGrid[row][col];
+                    const value = cell.textContent.trim();
+                    if (!/^[1-9]$/.test(value) || !isValidSudoku(row, col, value)) {
+                        return;
+                    }
+                }
+            }
+            // クリア時の演出
+            alert("おめでとう！数独をクリアしました！");
+            sudokuContainer.classList.add("sudoku-completed");
+        }
+
+        // メモモードの切り替え
+        toggleMemoButton.addEventListener("click", function() {
+            memoMode = !memoMode;
+            toggleMemoButton.textContent = memoMode ? "メモモード: ON" : "メモモード: OFF";
+        });
+
+        // リセットボタンのイベントリスナー
+        resetSudokuButton.addEventListener("click", function() {
+            sudokuContainer.classList.remove("sudoku-completed");
+            createSudokuGrid();
+        });
+
+        // 初期設定
+        createSudokuGrid();
+    });
+</script>
+
+    <!-- JavaScript -->
+    <script>
+        let playerAScore = 0;
+        let playerBScore = 0;
+        let playerAWinCount = 0;
+        let playerBWinCount = 0;
+
+        const playerARollButton = document.getElementById("playerA-roll");
+        const playerBRollButton = document.getElementById("playerB-roll");
+        const playerADice = document.getElementById("playerA-dice");
+        const playerBDice = document.getElementById("playerB-dice");
+        const playerANumber = document.getElementById("playerA-number");
+        const playerBNumber = document.getElementById("playerB-number");
+        const resultMessage = document.getElementById("result-message");
+        const playerAScoreDisplay = document.getElementById("playerA-score");
+        const playerBScoreDisplay = document.getElementById("playerB-score");
+        const resetButton = document.getElementById("reset-game");
+
+        let playerAResult = 0;
+        let playerBResult = 0;
+
+        // プレイヤーAがサイコロを振る
+        playerARollButton.addEventListener("click", function() {
+            if (playerAWinCount >= 3 || playerBWinCount >= 3) {
+                return; // すでにどちらかが3回勝ったらサイコロを振れない
+            }
+            playerAResult = Math.floor(Math.random() * 6) + 1;
+            playerADice.textContent = `🎲`;
+            playerANumber.textContent = playerAResult;
+            playerADice.classList.add("roll-animation");
+
+            // 次はプレイヤーBの番
+            playerARollButton.disabled = true;
+            playerBRollButton.disabled = false;
+
+            setTimeout(() => playerADice.classList.remove("roll-animation"), 500);
+        });
+
+        // プレイヤーBがサイコロを振る
+        playerBRollButton.addEventListener("click", function() {
+            if (playerAWinCount >= 3 || playerBWinCount >= 3) {
+                return; // すでにどちらかが3回勝ったらサイコロを振れない
+            }
+            playerBResult = Math.floor(Math.random() * 6) + 1;
+            playerBDice.textContent = `🎲`;
+            playerBNumber.textContent = playerBResult;
+            playerBDice.classList.add("roll-animation");
+
+            // 勝敗を判定
+            setTimeout(() => {
+                determineWinner();
+                playerBRollButton.disabled = true;
+            }, 500);
+        });
+
+        // 勝敗を判定する関数
+        function determineWinner() {
+            if (playerAResult > playerBResult) {
+                resultMessage.textContent = "勝負の結果: プレイヤーAの勝ち！🎉";
+                playerAWinCount++;
+            } else if (playerBResult > playerAResult) {
+                resultMessage.textContent = "勝負の結果: プレイヤーBの勝ち！🎉";
+                playerBWinCount++;
+            } else {
+                resultMessage.textContent = "引き分け！もう一度振ろう！";
+            }
+            updateScores();
+            checkGameOver();
+            resetRound();
+        }
+
+        // スコアを更新する関数
+        function updateScores() {
+            playerAScoreDisplay.textContent = playerAWinCount;
+            playerBScoreDisplay.textContent = playerBWinCount;
+        }
+
+        // ゲーム終了の判定
+        function checkGameOver() {
+            if (playerAWinCount >= 3) {
+                resultMessage.textContent = "ゲーム終了！プレイヤーAの勝ちです！🎉";
+                playerARollButton.disabled = true;
+                playerBRollButton.disabled = true;
+            } else if (playerBWinCount >= 3) {
+                resultMessage.textContent = "ゲーム終了！プレイヤーBの勝ちです！🎉";
+                playerARollButton.disabled = true;
+                playerBRollButton.disabled = true;
+            }
+        }
+
+        // 次のラウンドをリセットする関数
+        function resetRound() {
+            playerARollButton.disabled = false;
+            playerBRollButton.disabled = true;
+            playerADice.textContent = "🎲";
+            playerBDice.textContent = "🎲";
+            playerANumber.textContent = "0";
+            playerBNumber.textContent = "0";
+        }
+
+        // ゲーム全体をリセットする
+        resetButton.addEventListener("click", function() {
+            playerAWinCount = 0;
+            playerBWinCount = 0;
+            resultMessage.textContent = "勝負の結果: ???";
+            updateScores();
+            resetRound();
+            playerARollButton.disabled = false;
+            playerBRollButton.disabled = true;
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const moleContainer = document.getElementById("mole-container");
+            const startGameButton = document.getElementById("start-game");
+            const scoreDisplay = document.getElementById("score");
+            const timeDisplay = document.getElementById("time");
+            const bestScoresList = document.getElementById("best-scores");
+            let score = 0;
+            let activeMole = null;
+            let gameInterval = null;
+            let countdownInterval = null;
+            let timeLeft = 10;
+            let bestScores = [];
+            let moleIntervalTime = 1000; // モグラの出現間隔
+
+            // モグラの穴を作成する関数
+            function createMoleHoles() {
+                for (let i = 0; i < 9; i++) {
+                    const moleHole = document.createElement("div");
+                    moleHole.classList.add("mole-hole");
+                    moleHole.addEventListener("click", () => hitMole(i));
+                    moleContainer.appendChild(moleHole);
+                }
+            }
+
+            // モグラをランダムに表示する関数
+            function showMole() {
+                if (activeMole !== null) {
+                    moleContainer.children[activeMole].classList.remove("active");
+                }
+                const randomIndex = Math.floor(Math.random() * 9);
+                moleContainer.children[randomIndex].classList.add("active");
+                activeMole = randomIndex;
+            }
+
+            // モグラを叩いたときの処理
+            function hitMole(index) {
+                if (index === activeMole) {
+                    score++;
+                    scoreDisplay.textContent = score;
+                    moleContainer.children[activeMole].classList.remove("active");
+                    activeMole = null;
+                    // モグラの出現間隔を短くする
+                    moleIntervalTime = Math.max(200, moleIntervalTime - 100);
+                    clearInterval(gameInterval);
+                    gameInterval = setInterval(showMole, moleIntervalTime);
+                }
+            }
+
+            // ゲームを開始する関数
+            function startGame() {
+                score = 0;
+                scoreDisplay.textContent = score;
+                timeLeft = 10;
+                timeDisplay.textContent = timeLeft;
+                moleIntervalTime = 1000; // 初期のモグラの出現間隔
+                gameInterval = setInterval(showMole, moleIntervalTime);
+                countdownInterval = setInterval(countdown, 1000);
+            }
+
+            // ゲームを停止する関数
+            function stopGame() {
+                clearInterval(gameInterval);
+                clearInterval(countdownInterval);
+                if (activeMole !== null) {
+                    moleContainer.children[activeMole].classList.remove("active");
+                    activeMole = null;
+                }
+                updateBestScores();
+            }
+
+            // カウントダウンを行う関数
+            function countdown() {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    stopGame();
+                }
+            }
+
+            // ベストスコアを更新する関数
+            function updateBestScores() {
+                bestScores.push(score);
+                bestScores.sort((a, b) => b - a);
+                if (bestScores.length > 5) {
+                    bestScores.pop();
+                }
+                renderBestScores();
+            }
+
+            // ベストスコアを表示する関数
+            function renderBestScores() {
+                bestScoresList.innerHTML = "";
+                bestScores.forEach((score, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${index + 1}. ${score}点`;
+                    bestScoresList.appendChild(li);
+                });
+            }
+
+            // スタートボタンのイベントリスナー
+            startGameButton.addEventListener("click", function() {
+                stopGame();
+                startGame();
+            });
+
+            // 初期設定
+            createMoleHoles();
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const minesweeperContainer = document.getElementById("minesweeper-container");
+            const resetMinesweeperButton = document.getElementById("reset-minesweeper");
+            const mineCountDisplay = document.getElementById("mine-count");
+            const rows = 10;
+            const cols = 10;
+            let minesCount = 9; // 最大9個の地雷
+            let minesweeperGrid = [];
+            let gameOver = false;
+
+            // マインスイーパのセルを作成する関数
+            function createMinesweeperGrid() {
+                minesweeperContainer.innerHTML = "";
+                minesweeperGrid = [];
+                gameOver = false;
+
+                // 地雷の数を設定
+                minesCount = Math.floor(Math.random() * 9) + 1; // 1から9の間でランダム
+                mineCountDisplay.textContent = minesCount;
+
+                for (let row = 0; row < rows; row++) {
+                    const rowArray = [];
+                    for (let col = 0; col < cols; col++) {
+                        const cell = document.createElement("div");
+                        cell.classList.add("minesweeper-cell");
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        cell.addEventListener("click", () => openCell(row, col));
+                        minesweeperContainer.appendChild(cell);
+                        rowArray.push({ element: cell, mine: false, opened: false, flagged: false });
+                    }
+                    minesweeperGrid.push(rowArray);
+                }
+
+                // 地雷をランダムに配置
+                let minesPlaced = 0;
+                while (minesPlaced < minesCount) {
+                    const randomRow = Math.floor(Math.random() * rows);
+                    const randomCol = Math.floor(Math.random() * cols);
+                    if (!minesweeperGrid[randomRow][randomCol].mine) {
+                        minesweeperGrid[randomRow][randomCol].mine = true;
+                        minesPlaced++;
+                    }
+                }
+            }
+
+            // セルを開ける関数
+            function openCell(row, col) {
+                if (gameOver || minesweeperGrid[row][col].opened) return;
+
+                const cell = minesweeperGrid[row][col];
+                cell.opened = true;
+                cell.element.classList.add("opened");
+
+                if (cell.mine) {
+                    cell.element.classList.add("mine");
+                    gameOver = true;
+                    alert("ゲームオーバー！地雷を踏みました！");
+                    revealMines();
+                    return;
+                }
+
+                const adjacentMines = countAdjacentMines(row, col);
+                if (adjacentMines > 0) {
+                    cell.element.textContent = adjacentMines;
+                } else {
+                    // 周囲に地雷がない場合は隣接するセルも開ける
+                    openAdjacentCells(row, col);
+                }
+
+                checkWin();
+            }
+
+            // 周囲の地雷の数を数える関数
+            function countAdjacentMines(row, col) {
+                let count = 0;
+                for (let r = -1; r <= 1; r++) {
+                    for (let c = -1; c <= 1; c++) {
+                        const newRow = row + r;
+                        const newCol = col + c;
+                        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && minesweeperGrid[newRow][newCol].mine) {
+                            count++;
+                        };
+                    }
+                }
+                return count;
+            }
+
+            // 隣接するセルを開ける関数
+            function openAdjacentCells(row, col) {
+                for (let r = -1; r <= 1; r++) {
+                    for (let c = -1; c <= 1; c++) {
+                        const newRow = row + r;
+                        const newCol = col + c;
+                        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !minesweeperGrid[newRow][newCol].opened) {
+                            openCell(newRow, newCol);
+                        }
+                    }
+                }
+            }
+
+            // 地雷をすべて表示する関数
+            function revealMines() {
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        if (minesweeperGrid[row][col].mine) {
+                            minesweeperGrid[row][col].element.classList.add("mine");
+                        }
+                    }
+                }
+            }
+
+            // 勝利をチェックする関数
+            function checkWin() {
+                let openedCells = 0;
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        if (minesweeperGrid[row][col].opened) {
+                            openedCells++;
+                        }
+                    }
+                }
+                if (openedCells === rows * cols - minesCount) {
+                    alert("おめでとう！すべてのセルを開けました！");
+                    gameOver = true;
+                    revealMines();
+                }
+            }
+
+            // リセットボタンのイベントリスナー
+            resetMinesweeperButton.addEventListener("click", createMinesweeperGrid);
+
+            // 初期設定
+            createMinesweeperGrid();
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+        const sudokuContainer = document.getElementById("sudoku-container");
+        const resetSudokuButton = document.getElementById("reset-sudoku");
+        const toggleMemoButton = document.getElementById("toggle-memo");
+        const size = 9;
+        let sudokuGrid = [];
+        let memoMode = false;
+
+        // 数独のセルを作成する関数
+        function createSudokuGrid() {
+            sudokuContainer.innerHTML = "";
+            sudokuGrid = [];
+
+            for (let row = 0; row < size; row++) {
+                const rowArray = [];
+                for (let col = 0; col < size; col++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("sudoku-cell");
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.contentEditable = true;
+                    cell.addEventListener("input", () => validateCell(row, col));
+                    sudokuContainer.appendChild(cell);
+                    rowArray.push(cell);
+                }
+                sudokuGrid.push(rowArray);
+            }
+
+            // 数独の初期配置を設定
+            setInitialSudokuValues();
+        }
+
+        // 数独の初期配置を設定する関数
+        function setInitialSudokuValues() {
+            const initialValuesList = [
+                [
+                    [5, 3, null, null, 7, null, null, null, null],
+                    [6, null, null, 1, 9, 5, null, null, null],
+                    [null, 9, 8, null, null, null, null, 6, null],
+                    [8, null, null, null, 6, null, null, null, 3],
+                    [4, null, null, 8, null, 3, null, null, 1],
+                    [7, null, null, null, 2, null, null, null, 6],
+                    [null, 6, null, null, null, null, 2, 8, null],
+                    [null, null, null, 4, 1, 9, null, null, 5],
+                    [null, null, null, null, 8, null, null, 7, 9]
+                ],
+                [
+                    [null, null, null, 2, 6, null, 7, null, 1],
+                    [6, 8, null, null, 7, null, null, 9, null],
+                    [1, 9, null, null, null, 4, 5, null, null],
+                    [8, 2, null, 1, null, null, null, 4, null],
+                    [null, null, 4, 6, null, 2, 9, null, null],
+                    [null, 5, null, null, null, 3, null, 2, 8],
+                    [null, null, 9, 3, null, null, null, 7, 4],
+                    [null, 4, null, null, 5, null, null, 3, 6],
+                    [7, null, 3, null, 1, 8, null, null, null]
+                ],
+                [
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null]
+                ]
+            ];
+
+            const initialValues = initialValuesList[Math.floor(Math.random() * initialValuesList.length)];
+
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    if (initialValues[row][col] !== null) {
+                        sudokuGrid[row][col].textContent = initialValues[row][col];
+                        sudokuGrid[row][col].contentEditable = false;
+                    }
+                }
+            }
+        }
+
+        // セルの入力を検証する関数
+        function validateCell(row, col) {
+            const cell = sudokuGrid[row][col];
+            const value = cell.textContent.trim();
+
+            if (memoMode) {
+                cell.classList.add("memo");
+            } else {
+                cell.classList.remove("memo");
+                if (!/^[1-9]$/.test(value)) {
+                    cell.textContent = "";
+                    return;
+                }
+
+                // 行、列、ブロックの重複をチェック
+                if (!isValidSudoku(row, col, value)) {
+                    cell.classList.add("invalid");
+                } else {
+                    cell.classList.remove("invalid");
+                    checkWin();
+                }
+            }
+        }
+
+        // 数独の有効性をチェックする関数
+        function isValidSudoku(row, col, value) {
+            // 行のチェック
+            for (let c = 0; c < size; c++) {
+                if (c !== col && sudokuGrid[row][c].textContent.trim() === value) {
+                    return false;
+                }
+            }
+
+            // 列のチェック
+            for (let r = 0; r < size; r++) {
+                if (r !== row && sudokuGrid[r][col].textContent.trim() === value) {
+                    return false;
+                }
+            }
+
+            // ブロックのチェック
+            const startRow = Math.floor(row / 3) * 3;
+            const startCol = Math.floor(col / 3) * 3;
+            for (let r = startRow; r < startRow + 3; r++) {
+                for (let c = startCol; c < startCol + 3; c++) {
+                    if ((r !== row || c !== col) && sudokuGrid[r][c].textContent.trim() === value) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        // 数独がクリアされたかチェックする関数
+        function checkWin() {
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const cell = sudokuGrid[row][col];
+                    const value = cell.textContent.trim();
+                    if (!/^[1-9]$/.test(value) || !isValidSudoku(row, col, value)) {
+                        return;
+                    }
+                }
+            }
+            // クリア時の演出
+            alert("おめでとう！数独をクリアしました！");
+            sudokuContainer.classList.add("sudoku-completed");
+        }
+
+        // メモモードの切り替え
+        toggleMemoButton.addEventListener("click", function() {
+            memoMode = !memoMode;
+            toggleMemoButton.textContent = memoMode ? "メモモード: ON" : "メモモード: OFF";
+        });
+
+        // リセットボタンのイベントリスナー
+        resetSudokuButton.addEventListener("click", function() {
+            sudokuContainer.classList.remove("sudoku-completed");
+            createSudokuGrid();
+        });
+
+        // 初期設定
+        createSudokuGrid();
+    });
+    </script>
+
+</body>
+</html>

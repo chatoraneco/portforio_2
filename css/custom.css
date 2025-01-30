@@ -1,0 +1,337 @@
+/* 基本リセット */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #fafafa;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ヘッダー */
+header {
+    background-color: aqua;
+    color: gray;
+    padding: 10px 0;
+}
+
+.nav-container nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.nav-container nav ul li {
+    margin: 0 20px;
+}
+
+.nav-container nav ul li a {
+    color: gray;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.nav-container nav ul li a:hover {
+    color: aqua;
+}
+
+/* ヒーローセクション */
+.hero {
+    height: 100vh;
+    background: url('../images/SFFFFFF.webp') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ff66b2;
+}
+
+.hero-content h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.cta-button {
+    padding: 12px 25px;
+    background-color: #ff66b2;
+    color: white;
+    border-radius: 5px;
+}
+
+.cta-button:hover {
+    background-color: #ff3385;
+}
+
+/* 共通セクション */
+section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.about, .contact {
+    background-color: white;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.work .gallery {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.work .item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.work .item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.work .item:hover img {
+    transform: scale(1.1);
+}
+
+.work .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.work .item:hover .overlay {
+    opacity: 1;
+}
+
+/* サイコロゲーム */
+.game-container {
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+}
+
+.dice {
+    font-size: 4rem;
+    margin: 20px;
+}
+
+.game-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+.game-button:hover {
+    background-color: #45a049;
+}
+
+@keyframes roll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.roll-animation {
+    animation: roll 0.5s ease;
+}
+
+/* お問い合わせ */
+.contact form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact form input, .contact form textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.contact form button {
+    background-color: #66cc66;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+.player-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.result-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.result-section h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.dice {
+    font-size: 3.5rem;
+    margin: 10px auto;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+.roll-animation {
+    animation: roll 0.5s ease-in-out;
+}
+
+@keyframes roll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.mole-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.mole-hole {
+    width: 80px;
+    height: 80px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mole-hole.active {
+    background-color: #FF5722;
+}
+
+.minesweeper-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.minesweeper-cell {
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid #333;
+}
+
+.minesweeper-cell.opened {
+    background-color: #f0f0f0;
+    cursor: default;
+}
+
+.minesweeper-cell.mine {
+    background-color: #FF5722;
+}
+
+.sudoku-container {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.sudoku-cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #333;
+    outline: none;
+}
+
+.sudoku-cell.invalid {
+    background-color: #FFCCCC;
+}
+
+.sudoku-cell.memo {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 3x3ブロックごとに太い線で区切る */
+.sudoku-cell:nth-child(3n+1) {
+    border-left-width: 2px;
+}
+
+.sudoku-cell:nth-child(3n) {
+    border-right-width: 2px;
+}
+
+.sudoku-container > .sudoku-cell:nth-child(27n+1),
+.sudoku-container > .sudoku-cell:nth-child(27n+2),
+.sudoku-container > .sudoku-cell:nth-child(27n+3) {
+    border-top-width: 2px;
+}
+
+.sudoku-container > .sudoku-cell:nth-child(n+19):nth-child(-n+21),
+.sudoku-container > .sudoku-cell:nth-child(n+46):nth-child(-n+48),
+.sudoku-container > .sudoku-cell:nth-child(n+73):nth-child(-n+75) {
+    border-bottom-width: 2px;
+}
+
+/* クリア時の演出 */
+.sudoku-completed .sudoku-cell {
+    background-color: #D4EDDA;
+}
